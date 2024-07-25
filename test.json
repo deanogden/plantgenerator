@@ -1,0 +1,58 @@
+{
+"Enterprise Domain": {
+    "Name": "Commercial and Institutional",
+    "Architecture Domain": {
+        "NWM": {
+            "Name": "Natwest Markets", 
+            "Sub Domains": {
+                "NWM Risk Platform": {
+                "Name": "NWM Risk Platform",
+                "Tag Description":"Application TCO", 
+                "Tags": ["Invest","Exit","Other"]
+                },
+                "NWM Riskier Platform": {
+                    "Name": "NWM Riskier Platform", 
+                    "Tag Description":"Application TCO",
+                    "Tags": ["Invest","Exit","Other"]
+                }
+            }
+        },
+        "Commercial": {
+            "Name": "Commercial",
+            "Sub Domains": { 
+                "Manage My Money": {
+                    "Name":"Manage My Money",
+                    "Tag Description":"Application TCO",
+                    "Tags": ["Invest","Exit","Other"]
+                    },
+                "Expand My Business": {
+                    "Name": "Expand My Business",
+                    "Tag Description":"Application TCO",
+                    "Tags": ["Invest","Exit","Other"]
+                    },
+                "Murder My Granny": {
+                    "Name": "Murder My Granny",
+                    "Tag Description":"Application TCO",
+                    "Tags": ["Invest","Exit","Other"]
+                    },
+                    "Axe Your Wifey": {
+                        "Name": "Axe Your Wife",
+                        "Tag Description":"Application TCO",
+                        "Tags": ["Invest","Exit","Other"]
+                    }
+                }
+            },
+        "Other": {
+            "Name": "Other",
+            "Sub Domains": { 
+                "Other My Money": {
+                    "Name":"Other My Money",
+                    "Tag Description":"Application TCO",
+                    "Tags": ["Invest","Exit","Other"]
+                    }
+                }    
+    
+            }
+        }
+    }
+}

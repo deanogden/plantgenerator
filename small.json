@@ -1,0 +1,26 @@
+{
+    "Enterprise Domain": {
+        "Name": "Commercial and Institutional",
+        "Architecture Domain": {
+            "NWM": {
+                "Name": "Natwest Markets",
+                "Type": "business-function", 
+                "Sub Domains": {
+                    "NWM Risk Platform": {
+                    "Name": "NWM Risk Platform", 
+                    "Tag Description":"Application Strategic Intent",
+                    "Type": "application-component",
+                    "Tags": ["Invest","Exit","Other"]
+                    },
+                    "Expand My Business": {
+                        "Name": "Expand My Business",
+                        "Tag Description":"Application Strategic Intent",
+                        "Tags": ["Application TCO","Invest","Exit","Other"]
+                    }
+                }
+            }
+
+        }
+
+    }
+}
