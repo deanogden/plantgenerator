@@ -1,54 +1,47 @@
 import json
 import os
-import pandas as pd
-
-#Start XL Function
 
 
-def get_value_from_excel(domain_name, excel_file='your_file.xlsx', sheet_name='totals', header_values=''):
+#Start data match
+
+def get_value_from_data(domain_name, data_file='your_file.xlsx', tags=''):
     """
-    Retrieves the corresponding value from an Excel sheet based on the given domain_name.
+    Retrieves the corresponding value from an json file based on the given domain_name. Assume this will 
+    move to an API json response payload from Waltz.
 
     Args:
         domain_name (str): The domain name to search for.
-        excel_file (str): Path to the Excel file (default: 'your_file.xlsx').
-        sheet_name (str): Name of the sheet containing the data (default: 'totals').
-
+        header_values: The Tags header values to pull out
     Returns:
         str: The corresponding value for the given domain_name, or None if not found.
     """
     try:
-        # Read the data into a pandas DataFrame
-        df = pd.read_excel(excel_file, sheet_name=sheet_name)
-
-        # Filter the DataFrame based on the domain_name
-        filtered_df = df[df['Domain'] == domain_name]
-
-        values_dict = {}
-        if not filtered_df.empty:
-            for header in header_values:
-                if header in filtered_df.columns:
-                    values_dict[header] = filtered_df[header].iloc[0]
-                else:
-                    print(f"Column '{header}' not found in the data.")
-        return values_dict
-
-        if not filtered_df.empty:
-            #corresponding_value = filtered_df['values'].iloc[0]
-            return data[domain_name]
+        # Check if the file exists CURRENTLY Redundant for use as output file
+        if os.path.exists(data_file):
+            #C:\Users\deano\vscode\python\CIOnPage\data.json
+            with open(data_file, 'r') as data_file: data_content = json.load(data_file)
+            
+        #corresponding_value = filtered_df['values'].iloc[0]
+            for item in data_content:
+                if item['Domain'] == domain_name:
+                    result = {key: value for key, value in item.items() if key in tags}
+                    return result
         else:
             print(f"No data found for domain '{domain_name}'")
             return None
     except FileNotFoundError:
-        print(f"Excel file '{excel_file}' not found.")
+        print(f"Data file '{data_file}' not found.")
         return None
     
 #End XL Function
 
 file_path = "C:\\temp\\output.txt"
-config_path = "C:\\users\\ICON0375\\Documents\\python\\"
-#json_path = config_path + "test.json"
-json_path = config_path + "small.json"
+config_path = "C:\\users\\deano\\vscode\\python\\CIOnPage\\"
+#data_path = "C:\\users\\deano\\vscode\\python\\CIOnPage\\"
+json_path = config_path + "test.json"
+#Assume that data will eventually be an API
+data_file = config_path + "data.json"
+#json_path = config_path + "small.json"
 excel_file = config_path + "env_data.xlsx"
 tag_values = ""
 indents = 0
@@ -83,8 +76,7 @@ postfix_business_function = "<<$bFunction>> #Business{"
 postfix_business_service = "<<$bService>> #Business{"
 postfix_application = "<<$aComponent>> #Application"
 
-
-# Check if the file exists CURRENTLY Redundant
+# Check if the file exists CURRENTLY Redundant for use as output file
 if not os.path.exists(file_path):
     # Create the file if it doesn't exist
     with open(file_path, 'w') as file:
@@ -94,18 +86,18 @@ with open(json_path, 'r') as file: data = json.load(file)
 
 enterprise_domain_name= data["Enterprise Domain"]["Name"] 
 architecture_domains= data["Enterprise Domain"]["Architecture Domain"]
-print(f"Domain Name: {enterprise_domain_name}")
-print(f"{prefix} {enterprise_domain_name} {postfix}")
-print(f"Archictecture Domain Names: ")
+#print(f"Domain Name: {enterprise_domain_name}")
+#print(f"{prefix} {enterprise_domain_name} {postfix}")
+#print(f"Archictecture Domain Names: ")
 
 output_string = puml_header + "\n"
 output_string += prefix + f'"{enterprise_domain_name}"' + postfix_business_function + " \n"
 for archdomainkey, archdomainvalue in architecture_domains.items(): 
 
-    print (f"Architecture Domain: {archdomainvalue['Name']}")
-    print(f"{prefix} {archdomainvalue['Name']} {postfix_business_service}") 
+    #print (f"Architecture Domain: {archdomainvalue['Name']}")
+    #print(f"{prefix} {archdomainvalue['Name']} {postfix_business_service}") 
     domain_prefix = archdomainvalue['Name'][:3]
-    print(f"domain prefix: {domain_prefix}")
+    #print(f"domain prefix: {domain_prefix}")
     output_string += prefix + f'"' + archdomainvalue['Name'] + f'"' + postfix_business_service + " \r \n"
     indents = 1
     sub_domains = archdomainvalue["Sub Domains"]
@@ -115,8 +107,8 @@ for archdomainkey, archdomainvalue in architecture_domains.items():
         i = 1 
     for subdomainkey, subdomainvalue in sub_domains.items(): 
 
-        print(f"Sub Domains: {subdomainvalue['Name']}")
-        print(f"{prefix} {subdomainvalue['Name']} {postfix}")
+        #print(f"Sub Domains: {subdomainvalue['Name']}")
+        #print(f"{prefix} {subdomainvalue['Name']} {postfix}")
         output_string += "\t" * (indents) + prefix + f'"' + subdomainvalue['Name'] + f'"' + postfix_business_service + " \r \n"
         
         if "Tags" in subdomainvalue:
@@ -124,11 +116,11 @@ for archdomainkey, archdomainvalue in architecture_domains.items():
             tags = subdomainvalue["Tags"]
             tag_values = ""
 
-            result = get_value_from_excel(subdomainvalue['Name'],excel_file, 'totals',tags)
+            result = get_value_from_data(subdomainvalue['Name'],data_file,tags)
             if result:
-                print(f"The values for domain '{subdomainvalue['Name']}' is: {result}")
+                #print(f"The values for domain '{subdomainvalue['Name']}' is: {result}")
                 value_descriptor = subdomainvalue['Tag Description']
-                print(f"Value Descriptor is: {value_descriptor}")
+                #print(f"Value Descriptor is: {value_descriptor}")
                 for key, value in result.items():
                     tag_values += f'{key} : {value}' + """\\n"""            
                 output_string += "\t" * (indents) + prefix + f'" <b>' + value_descriptor + '</b> \\n' + tag_values + f'" ' +  f'As {domain_prefix}{i}' + f' ' + postfix_application + " \n"
