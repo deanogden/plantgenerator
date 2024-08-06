@@ -1,5 +1,6 @@
 import json
 import os
+import datetime
 
 
 #Start data match
@@ -32,10 +33,39 @@ def get_value_from_data(domain_name, data_file='your_file.xlsx', tags=''):
     except FileNotFoundError:
         print(f"Data file '{data_file}' not found.")
         return None
+def generate_unique_file_name():
+    # Get the current date and time
+    now = datetime.datetime.now()
     
-#End XL Function
+    # Format the date and time as ddmmyyhhmmss
+    unique_id = now.strftime("%d%m%y%H%M%S")
+    
+    return unique_id
+def save_puml_to_file(file_name, puml_content):
+    """
+    Saves the given text content to a file if it doesn't already exist.
 
-file_path = "C:\\temp\\output.txt"
+    Args:
+        file_name (str): The name of the file.
+        puml_content (str): The text content to save in the file.
+
+    Returns:
+        str: A message indicating whether the file was created or already exists.
+    """
+    # Check if the file already exists
+    if os.path.exists(file_name):
+        return f"The file '{file_name}' already exists."
+    else:
+        # Create the file and write the text content to it
+        with open(file_name, 'w') as file:
+            file.write(puml_content)
+        return f"The file '{file_name}' has been created and the content has been saved."
+
+
+unique_id = generate_unique_file_name()
+#print(unique_id)
+
+puml_file = "C:\\temp\\" +  unique_id + "output.puml"
 config_path = "C:\\users\\deano\\vscode\\python\\CIOnPage\\"
 #data_path = "C:\\users\\deano\\vscode\\python\\CIOnPage\\"
 json_path = config_path + "test.json"
@@ -76,16 +106,11 @@ postfix_business_function = "<<$bFunction>> #Business{"
 postfix_business_service = "<<$bService>> #Business{"
 postfix_application = "<<$aComponent>> #Application"
 
-# Check if the file exists CURRENTLY Redundant for use as output file
-if not os.path.exists(file_path):
-    # Create the file if it doesn't exist
-    with open(file_path, 'w') as file:
-        file.write('')
 
 with open(json_path, 'r') as file: data = json.load(file)
 
 enterprise_domain_name= data["Enterprise Domain"]["Name"] 
-architecture_domains= data["Enterprise Domain"]["Architecture Domain"]
+architecture_domains= data["Enterprise Domain"]["Domain Group"]
 #print(f"Domain Name: {enterprise_domain_name}")
 #print(f"{prefix} {enterprise_domain_name} {postfix}")
 #print(f"Archictecture Domain Names: ")
@@ -100,7 +125,7 @@ for archdomainkey, archdomainvalue in architecture_domains.items():
     #print(f"domain prefix: {domain_prefix}")
     output_string += prefix + f'"' + archdomainvalue['Name'] + f'"' + postfix_business_service + " \r \n"
     indents = 1
-    sub_domains = archdomainvalue["Sub Domains"]
+    sub_domains = archdomainvalue["Domains"]
 
     if sub_domains:
         indents += 1
@@ -139,5 +164,9 @@ for archdomainkey, archdomainvalue in architecture_domains.items():
 output_string += end_puml
 
 print(output_string) 
+#write to unique file in temp folder
+save_puml_to_file(puml_file,output_string)
+
+
 
 

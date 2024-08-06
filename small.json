@@ -1,11 +1,11 @@
 {
     "Enterprise Domain": {
         "Name": "Commercial and Institutional",
-        "Architecture Domain": {
+        "Domain Group": {
             "NWM": {
                 "Name": "Natwest Markets",
                 "Type": "business-function", 
-                "Sub Domains": {
+                "Domains": {
                     "NWM Risk Platform": {
                     "Name": "NWM Risk Platform", 
                     "Tag Description":"Application Strategic Intent",
