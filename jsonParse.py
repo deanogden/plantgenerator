@@ -74,6 +74,7 @@ unique_id = generate_unique_file_name()
 
 ###############################
 #Config locations defined here#
+# C:\temp must be C:\\temp\\ using double backslash with that at the end of the path
 ###############################
 output_file_path = "C:\\temp\\"
 puml_file = unique_id + "output.puml"
