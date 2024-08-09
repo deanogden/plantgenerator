@@ -41,38 +41,50 @@ def generate_unique_file_name():
     unique_id = now.strftime("%d%m%y%H%M%S")
     
     return unique_id
-def save_puml_to_file(file_name, puml_content):
+def save_puml_to_file(file_path, file_name, puml_content):
     """
     Saves the given text content to a file if it doesn't already exist.
 
     Args:
+        file_path: Path to output file
         file_name (str): The name of the file.
         puml_content (str): The text content to save in the file.
 
     Returns:
         str: A message indicating whether the file was created or already exists.
     """
+    #
+    #Check if path folder exists and if not default to the current working directory
+    if not os.path.exists(file_path):
+    # If it doesn't exist, set the folder to the current working directory
+        file_path = os.getcwd()
+        print(f"The output folder didnt exist so is set to: {file_path}")
+
     # Check if the file already exists
-    if os.path.exists(file_name):
+    if os.path.exists(file_path + "\\" + file_name):
         return f"The file '{file_name}' already exists."
     else:
         # Create the file and write the text content to it
-        with open(file_name, 'w') as file:
+        with open(file_path + file_name, 'w') as file:
             file.write(puml_content)
-        return f"The file '{file_name}' has been created and the content has been saved."
+        return f"The file '{file_path +file_name}' has been created and the content has been saved."
 
 
 unique_id = generate_unique_file_name()
-#print(unique_id)
 
-puml_file = "C:\\temp\\" +  unique_id + "output.puml"
+###############################
+#Config locations defined here#
+###############################
+output_file_path = "C:\\temp\\"
+puml_file = unique_id + "output.puml"
 config_path = "C:\\users\\deano\\vscode\\python\\CIOnPage\\"
 #data_path = "C:\\users\\deano\\vscode\\python\\CIOnPage\\"
 json_path = config_path + "test.json"
 #Assume that data will eventually be an API
 data_file = config_path + "data.json"
 #json_path = config_path + "small.json"
-excel_file = config_path + "env_data.xlsx"
+
+
 tag_values = ""
 indents = 0
 output_string = ""
@@ -165,7 +177,9 @@ output_string += end_puml
 
 print(output_string) 
 #write to unique file in temp folder
-save_puml_to_file(puml_file,output_string)
+file_write_response = save_puml_to_file(output_file_path,puml_file,output_string)
+
+print(file_write_response)
 
 
 
